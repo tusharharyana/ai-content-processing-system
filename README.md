@@ -7,7 +7,7 @@ The system scrapes blog articles from BeyondChats, stores them in a database, en
 ---
 
 ## Project Architecture
-![alt text](<Screenshot from 2025-12-23 12-30-09.png>)
+![Project Architecture](assets/architecture.png)
 
 ## Phase 1 – Backend (Laravel)
 
@@ -120,3 +120,7 @@ npm run dev
 - Access token from 
 https://huggingface.co/ as HF_API_KEY
 - API key from https://serper.dev/ as SERPER_API_KEY
+
+## UI Screenshots
+![alt text](assets/image.png)
+![alt text](assets/image-1.png)
