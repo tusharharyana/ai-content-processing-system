@@ -4,6 +4,7 @@ const {
   searchGoogle,
   extractTopBlogLinks,
 } = require("./services/googleSearch");
+const { scrapeArticleContent } = require("./services/scraper");
 
 (async () => {
   try {
@@ -14,6 +15,13 @@ const {
     const links = extractTopBlogLinks(results);
 
     console.log("Top competitor links:", links);
+
+    for (const link of links) {
+      console.log("\nScraping:", link);
+      const content = await scrapeArticleContent(link);
+      console.log("Content length:", content.length);
+  }
+
   } catch (err) {
     console.error("Error:", err.message);
   }
