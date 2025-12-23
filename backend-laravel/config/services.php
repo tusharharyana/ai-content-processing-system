@@ -35,4 +35,8 @@ return [
         ],
     ],
 
+    'blog_scraper' => [
+        'url' => env('BLOG_SCRAPE_URL'),
+    ],
+
 ];
