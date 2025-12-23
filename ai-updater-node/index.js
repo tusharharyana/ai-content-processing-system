@@ -1,10 +1,11 @@
 require("dotenv").config();
-const { getLatestArticle } = require("./services/laravelApi");
+const { getLatestArticle, publishArticle } = require("./services/laravelApi");
 const {
   searchGoogle,
   extractTopBlogLinks,
 } = require("./services/googleSearch");
 const { scrapeArticleContent } = require("./services/scraper");
+const { rewriteArticle } = require("./services/aiRewrite");
 
 (async () => {
   try {
@@ -14,13 +15,41 @@ const { scrapeArticleContent } = require("./services/scraper");
     const results = await searchGoogle(article.title);
     const links = extractTopBlogLinks(results);
 
-    console.log("Top competitor links:", links);
-
-    for (const link of links) {
-      console.log("\nScraping:", link);
-      const content = await scrapeArticleContent(link);
-      console.log("Content length:", content.length);
+    if (!links.length) {
+    console.log("No competitor articles found");
+    return;
   }
+
+  const referenceLink = links.find(
+    (l) => l.includes("ncbi.nlm.nih.gov")
+  );
+
+  if (!referenceLink) {
+    console.log("No usable reference article");
+    return;
+  }
+
+  const referenceText = await scrapeArticleContent(referenceLink);
+
+  if (!referenceText) {
+    console.log("Reference scraping failed");
+    return;
+  }
+
+  const updatedContent = await rewriteArticle(
+    article.content,
+    referenceText,
+    referenceLink
+  );
+
+  await publishArticle({
+    title: article.title + " (Updated)",
+    content: updatedContent,
+    is_updated: true,
+    source_url: article.source_url,
+  });
+
+  console.log("Updated article published");
 
   } catch (err) {
     console.error("Error:", err.message);
