@@ -3,6 +3,7 @@ const cheerio = require("cheerio");
 
 async function scrapeArticleContent(url) {
   try {
+    console.log("Scraping article content from:", url);
     const { data } = await axios.get(url, {
         timeout: 20000,
         headers: {

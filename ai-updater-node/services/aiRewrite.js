@@ -25,8 +25,9 @@ const MODEL_URL =
 }
 
 async function rewriteArticle(original, referenceText, referenceLink) {
+    console.log("Rewriting article using AI");
     const cleanedOriginal = cleanArticleContent(original);
-
+    console.log("Cleaned original:", cleanedOriginal);
     const prompt = `
         Rewrite the following article to improve clarity, structure, and depth.
 
@@ -69,7 +70,11 @@ async function rewriteArticle(original, referenceText, referenceLink) {
 
     return response.data[0].generated_text;
   } catch (error) {
-    console.error("Hugging Face API failed");
+    console.error("Hugging Face API failed : ", error.message);
+
+    if (error.response?.status === 410) {
+      console.log("Model unavailable, skipping AI rewrite.");
+    }
 
     return `
 ## Updated Article

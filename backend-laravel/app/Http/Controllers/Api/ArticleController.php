@@ -34,4 +34,26 @@ class ArticleController extends Controller
 
         return response()->json($article, 201);
     }
+
+    public function update(Request $request, $id)
+    {
+        $article = Article::findOrFail($id);
+        
+        $article->update([
+            'title'       => $request->title ?? $article->title,
+            'content'     => $request->content ?? $article->content,
+            'is_updated'  => $request->is_updated ?? $article->is_updated,
+        ]);
+
+        return response()->json($article);
+    }
+
+    public function getOldestUnupdatedArticle()
+    {
+        $article = Article::where('is_updated', false)
+            ->orderBy('created_at', 'asc')
+            ->first();
+
+        return response()->json($article);
+    }
 }

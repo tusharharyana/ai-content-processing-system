@@ -3,6 +3,7 @@ const axios = require("axios");
 const SERPER_API_KEY = process.env.SERPER_API_KEY;
 
 async function searchGoogle(query) {
+  console.log("Searching Google for:", query);
   const response = await axios.post(
     "https://google.serper.dev/search",
     {
